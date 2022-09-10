@@ -1,12 +1,15 @@
+const URL_TO_REQUEST = "http://localhost:3000/";
+
 const xhr = new XMLHttpRequest();
 xhr.onload = handleResponse;
 
-function handleClick()
-{
-  const elementId = document.getElementById("content");
-  elementId.textContent = xhr.response;
+const contentElement = document.getElementById("content");
 
-  xhr.open("GET", "http://localhost:3000/");
+function handleXHR()
+{
+  contentElement.textContent = xhr.response;
+
+  xhr.open("GET", URL_TO_REQUEST);
   xhr.send();
 }
 
@@ -14,7 +17,32 @@ function handleResponse()
 {
   if (xhr.readyState === 4)
   {
-    const elementId = document.getElementById("content");
-    elementId.textContent = xhr.response;
+    contentElement.textContent = xhr.response;
   }
+}
+
+function handleFetch()
+{
+  fetch(URL_TO_REQUEST, { method: 'GET'})
+    .then(response => response.text())
+    .then(response => contentElement.textContent = response)
+    .catch(err => console.error(`Could not send message to the server ${err.message}`));
+}
+
+async function handleFetch2()
+{
+  try
+  {
+    const response = await fetch(URL_TO_REQUEST, { method: 'GET'});
+    contentElement.textContent = await response.text();
+  }
+  catch (err)
+  {
+    console.error(`Could not send message to the server ${err.message}`);
+  }
+}
+
+function handleEmpty()
+{
+  contentElement.textContent = ""; 
 }
